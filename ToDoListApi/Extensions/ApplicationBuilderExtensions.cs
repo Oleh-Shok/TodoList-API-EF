@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ToDoListApi.Data;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace ToDoListApi.Extensions;
 
@@ -42,7 +45,7 @@ public static class ApplicationBuilderExtensions
                      new List<string>()
                  }
              });
-         });
+        });
     }
     public static void AddAuthentication(this IServiceCollection services, string issuer, string audience, string secretKey)
     {
@@ -90,5 +93,33 @@ public static class ApplicationBuilderExtensions
         {
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
         });
+    }
+    public static IEndpointRouteBuilder MapHealthChecks(this IEndpointRouteBuilder endpoints)
+    {
+        endpoints.MapHealthChecks("/health/startup", new HealthCheckOptions
+        {
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+        endpoints.MapHealthChecks("/health/Liveness", new HealthCheckOptions
+        {
+            Predicate = _ => false
+        });
+        endpoints.MapHealthChecks("/health/readiness", new HealthCheckOptions
+        {
+            Predicate = r => r.Tags.Contains("readiness"),
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+
+        return endpoints;
+    }
+    public static IHealthChecksBuilder AddSqlHealthCheck(this IHealthChecksBuilder builder, string connectionString)
+    {
+        builder.AddSqlServer(
+            connectionString,
+            name: "todoapidb",
+            tags: new[] { "readiness" },
+            failureStatus: HealthStatus.Degraded);
+
+        return builder;
     }
 }

@@ -1,6 +1,9 @@
 ﻿using ToDoListApi.Services;
 using ToDoListApi.Extensions;
 using Microsoft.Extensions.Localization;
+using ToDoListApi.Data;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +19,8 @@ builder.Services.AddAuthentication("localhost", "localhost", "your-secret-key-th
 builder.Services.AddAuthorization("Bearer");
 builder.Services.AddLocalization();
 builder.Services.AddScoped<IStringLocalizer, StringLocalizerService>();
+builder.Services.AddHealthChecks()
+        .AddSqlHealthCheck(builder.Configuration.GetConnectionString("DefaultConnection")!);
 
 var app = builder.Build();
 
@@ -36,6 +41,7 @@ app.UseHttpsRedirection();
 app.MapControllers();
 
 app.UseRequestLocalization("uk-UA");
+app.MapHealthChecks();
 
 app.Run();
 
