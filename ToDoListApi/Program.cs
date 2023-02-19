@@ -1,9 +1,6 @@
 ﻿using ToDoListApi.Services;
 using ToDoListApi.Extensions;
 using Microsoft.Extensions.Localization;
-using ToDoListApi.Data;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 

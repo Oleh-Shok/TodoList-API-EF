@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using ToDoListApi.Models.Exceptions;
-using ToDoListApi.Services;
 
 namespace ToDoListApi.Controllers
 {

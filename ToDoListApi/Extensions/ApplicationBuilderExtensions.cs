@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 using ToDoListApi.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using ToDoListApi.Data;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
